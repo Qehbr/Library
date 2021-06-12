@@ -1,4 +1,5 @@
 let library = [];
+
 //book class
 class Book {
     constructor(title, author, pages, isRead) {
@@ -12,25 +13,25 @@ class Book {
 function addToLibrary(newBook) {
     if (library.some((book) => book.title === newBook.title)) { return false; }
     library.push(newBook);
-    //saveLocal();
+    saveLocal();
     return true;
 }
 //remove book
 function removeFromLibrary(bookTitle) {
     library = library.filter((book) => book.title !== bookTitle);
-    // saveLocal();
+    saveLocal();
 }
 
 function getBook(bookTitle) {
     for (let book of library) {
-      if (book.title === bookTitle) {
-        return book;
-      }
+        if (book.title === bookTitle) {
+            return book;
+        }
     }
     return null;
-  }
+}
 
-
+//popup
 const newBookButton = document.querySelector(".new-book-button");
 const popup = document.querySelector(".popup");
 const overlay = document.querySelector(".overlay");
@@ -93,6 +94,7 @@ function checkBooksGridInput(e) {
             e.target.classList.remove("button-red");
             e.target.classList.add("button-green");
         }
+        saveLocal();
     }
 }
 
@@ -130,7 +132,7 @@ function createBookCard(book) {
     pages.textContent = `${book.pages} pages`;
     removeButton.textContent = "Remove";
 
-    if (book.isRead==="true") {
+    if (book.isRead === "true") {
         readButton.textContent = `Read`;
         readButton.classList.add("button-green");
     } else {
@@ -145,6 +147,18 @@ function createBookCard(book) {
     bookCard.appendChild(removeButton);
     booksGrid.appendChild(bookCard);
 }
+
+function saveLocal() {
+    localStorage.setItem("library", JSON.stringify(library));
+}
+
+function restoreLocal() {
+    library = JSON.parse(localStorage.getItem("library"));
+    if (library === null) library = [];
+    updateBooksGrid();
+}
+
+restoreLocal();
 
 
 
